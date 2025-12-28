@@ -1,4 +1,4 @@
-FROM openjdk:25-slim
+FROM eclipse-temurin:25
 VOLUME /tmp
 COPY target/*.jar /app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
