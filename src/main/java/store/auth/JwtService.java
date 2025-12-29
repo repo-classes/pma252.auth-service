@@ -23,7 +23,7 @@ public class JwtService {
     @Value("${store.jwt.secretKey}")
     private String secretKey;
 
-    public String generate(AccountOut account) {
+    public String generate(AccountOut account, long duration) {
 
         Date now = new Date();
 
@@ -38,7 +38,7 @@ public class JwtService {
             .signWith(getKey())
             .subject(account.name())
             .notBefore(now)
-            .expiration(new Date(now.getTime() + 1000 * 60 * 120)) // em milisegundos
+            .expiration(new Date(now.getTime() + duration)) // in miliseconds
             .compact();
         return jwt;
 

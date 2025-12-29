@@ -3,6 +3,7 @@ package store.auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,15 @@ import store.account.AccountOut;
 @Service
 public class AuthService {
 
+    public static final String AUTH_COOKIE_TOKEN = "__store_jwt_token";
+
     private Logger logger = LoggerFactory.getLogger(AuthService.class);
+
+    @Value("${store.token.duration}")
+    private Long tokenDuration;
+
+    @Value("${store.token.https}")
+    private Boolean tokenHTTPS;
 
     @Autowired
     private AccountController accountController;
@@ -41,7 +50,7 @@ public class AuthService {
         ).getBody();
 
         // Gera um token
-        String jwtString = jwtService.generate(account);
+        String jwtString = jwtService.generate(account, tokenDuration);
 
         // Retorna o token
         return jwtString;
@@ -67,13 +76,21 @@ public class AuthService {
         logger.debug(String.format("found user", account));
 
         // generate token
-        return jwtService.generate(account);
+        return jwtService.generate(account, tokenDuration);
     }
 
     public AccountOut solve(String jwt) {
         return AccountOut.builder()
             .id(jwtService.getId(jwt))
             .build();
+    }
+
+    public Long getTokenDuration() {
+        return tokenDuration;
+    }
+
+    public Boolean getTokenHTTPS() {
+        return tokenHTTPS;
     }
 
 }
