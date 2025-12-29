@@ -11,7 +11,10 @@ spring:
 
 store:
   jwt:
-    secretKey: ${JWT_SECRET_KEY:changeit}
+    secretKey: ${STORE_JWT_SECRET_KEY:changeit}
+  token:
+    duration: ${STORE_TOKEN_DURATION:3600000} # 1 hour in milliseconds
+    https: ${STORE_TOKEN_HTTPS:true}
 
 logging:
   level:
